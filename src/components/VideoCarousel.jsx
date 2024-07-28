@@ -1,18 +1,21 @@
+// Importing the GSAP library, React hooks, constants, and utility functions
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/all";
 gsap.registerPlugin(ScrollTrigger);
 import { useEffect, useRef, useState } from "react";
-
 import { highlightsSlides } from "../constants";
 import { pauseImg, playImg, replayImg } from "../utils";
 
+// Defining the component
 const VideoCarousel = () => {
+
+  // Create refs to store references to video, span, and div elements
   const videoRef = useRef([]);
   const videoSpanRef = useRef([]);
   const videoDivRef = useRef([]);
 
-  // video and indicator
+  // Defining state for managing video playback and status
   const [video, setVideo] = useState({
     isEnd: false,
     startPlay: false,
@@ -21,18 +24,21 @@ const VideoCarousel = () => {
     isPlaying: false,
   });
 
+  // Defining state for storing loaded metadata of videos
   const [loadedData, setLoadedData] = useState([]);
   const { isEnd, isLastVideo, startPlay, videoId, isPlaying } = video;
 
+  // GSAP hook to handle animations
   useGSAP(() => {
-    // slider animation to move the video out of the screen and bring the next video in
+    
+    // Animation to move the video slider
     gsap.to("#slider", {
       transform: `translateX(${-100 * videoId}%)`,
       duration: 2,
-      ease: "power2.inOut", // show visualizer https://gsap.com/docs/v3/Eases
+      ease: "power2.inOut",
     });
 
-    // video animation to play the video when it is in the view
+    // Animation to play the video when it is in the view
     gsap.to("#video", {
       scrollTrigger: {
         trigger: "#video",
@@ -48,6 +54,7 @@ const VideoCarousel = () => {
     });
   }, [isEnd, videoId]);
 
+  // useEffect hook to handle progress bar animation and video indicator
   useEffect(() => {
     let currentProgress = 0;
     let span = videoSpanRef.current;
